@@ -1,45 +1,48 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Select, Space, Modal } from 'antd';
-
-import React, { useState }  from 'react';
+import { Button, Card, Form, Input, Modal, Select, Space } from 'antd';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import useStore from '../../store';
 import cls from './index.module.less';
-import Link from 'antd/lib/typography/Link';
 
 const Register: React.FC = () => {
-  const { register , loading } = useStore((state) => ({ ...state }));
+  // const [form] = Form.useForm();
+  const { register, loading } = useStore((state) => ({ ...state }));
+  const { otp } = useStore((state) => ({ ...state }));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalSubmitted, setIsModalSubmitted] = useState(false)
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
 
-  const handleOk = () => {
+  const onFinish = (values: any) => {
+    console.log('Form values:', values);
+    return register(values);
+  };
+
+  console.log(typeof onFinish);
+  // if (onFinish) {
+  //   const showModal = () => {
+  //    setIsModalOpen(true);
+  //   };
+  // }
+
+  const handleOk = (values: any) => {
+    // setIsModalSubmitted(true);
     setIsModalOpen(false);
+    return otp(values);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
-
-
   return (
     <div className={cls.register}>
       <Card className="_bg" bordered={false}>
-        <Form
-          // onFinish={({ username, password }) => {
-          //   if (username === 'admin' && password === '123456') {
-          //     return login({ username, password });
-          //   }
-          //   message.error('Mật khẩu sai, thử lại đi!');
-          // }}
-        >
+        <Form onFinish={onFinish}>
           <Form.Item
             name="username"
             label="username"
@@ -52,11 +55,10 @@ const Register: React.FC = () => {
             rules={[
               { required: true, message: 'nhập tên bạn vào' },
               { min: 3, max: 50, message: 'Độ dài không hợp lệ' },
-            ]}
-          >
+            ]}>
             <Input prefix={<LockOutlined />} placeholder="name" />
           </Form.Item>
-         <Form.Item
+          <Form.Item
             name="email"
             label="email"
             rules={[
@@ -65,8 +67,7 @@ const Register: React.FC = () => {
                 type: 'email',
                 message: 'nhập email vào',
               },
-            ]}
-          >
+            ]}>
             <Input prefix={<LockOutlined />} placeholder="@" />
           </Form.Item>
           <Form.Item
@@ -75,8 +76,7 @@ const Register: React.FC = () => {
             rules={[
               { required: true, message: 'Nhập địa chỉ vào' },
               { min: 3, max: 50, message: 'Độ dài không hợp lệ' },
-            ]}
-          >
+            ]}>
             <Input prefix={<LockOutlined />} placeholder="hn" />
           </Form.Item>
           <Form.Item
@@ -84,16 +84,14 @@ const Register: React.FC = () => {
             label="phonenumber"
             rules={[
               { required: true, message: 'nhập sdt' },
-               { min: 10, max: 12, message: 'Độ dài không hợp lệ' },
-            ]}
-          >
+              { min: 10, max: 12, message: 'Độ dài không hợp lệ' },
+            ]}>
             <Input prefix={<LockOutlined />} placeholder="678" />
           </Form.Item>
           <Form.Item
             name="password"
             label="password"
-            rules={[{ required: true, message: 'nhập mk vào' }]}
-          >
+            rules={[{ required: true, message: 'nhập mk vào' }]}>
             <Input prefix={<LockOutlined />} placeholder="Nhap mk vao" />
           </Form.Item>
           <Form.Item
@@ -101,27 +99,22 @@ const Register: React.FC = () => {
             label="confirmPassword"
             dependencies={['password']}
             rules={[
-            { required: true, message: 'nhap lai mk' },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('common.confirmPasswordError'));
-              },
-             }),
-            ]}
-          >
+              { required: true, message: 'nhap lai mk' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Mật khẩu chưa trùng'));
+                },
+              }),
+            ]}>
             <Input prefix={<LockOutlined />} placeholder="Nhap mk vao" />
           </Form.Item>
           <Form.Item
             name="accountType"
             label="account type"
-            rules={[
-            { required: true, message: 'chon kieu tk' },
-             
-            ]}
-          >
+            dependencies={['defaultValue']}>
             <Space wrap>
               <Select
                 defaultValue="1"
@@ -141,30 +134,48 @@ const Register: React.FC = () => {
                 loading={loading}
                 type="primary"
                 htmlType="submit"
-                className={cls.button}
-                onClick={showModal}
-               >
-              
+                className={cls.button}>
                 Register
-            </Button>
-              <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <Form.Item
-                  name="otp"
-                  label="OTP"
-                  rules={[
-                    { required: true, message: 'Nhập mã otp' },
-                    { min: 6, max: 6, message: 'Độ dài không hợp lệ' },
-                  ]}
-                >
-                  <Input type='number' prefix={<LockOutlined />} placeholder="" />
-                </Form.Item>
+              </Button>
+              <Modal
+                title="Basic Modal"
+                open={isModalOpen}
+                onCancel={handleCancel}
+                footer={[
+                  <Button
+                    key="submit"
+                    type="primary"
+                    loading={loading}
+                    onClick={handleOk}>
+                    Submit
+                  </Button>,
+                ]}>
+                <Form onFinish={handleOk}>
+                  <Form.Item
+                    name="otp"
+                    label="OTP"
+                    rules={[
+                      { required: true, message: 'Nhập mã otp' },
+                      { min: 6, max: 6, message: 'Độ dài không hợp lệ' },
+                    ]}>
+                    <Input type="number" prefix={<LockOutlined />} placeholder="" />
+                  </Form.Item>
+                </Form>
               </Modal>
             </>
-              
-           
+          </Form.Item>
+          <Form.Item>
+            <Link to={'/user/login'}>
+              <Button
+                loading={loading}
+                type="default"
+                htmlType="button"
+                className={cls.button}>
+                Login
+              </Button>
+            </Link>
           </Form.Item>
         </Form>
-        
       </Card>
     </div>
   );

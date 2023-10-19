@@ -39,7 +39,12 @@ instance.interceptors.response.use(
 );
 
 const request = <T>(reqConfig: AxiosRequestConfig): Promise<T> => {
-  return instance.request<T, T>(reqConfig);
+  const data1 = instance.request<T, T>(reqConfig).then((o) => {
+    console.log('request', o);
+    return o;
+  });
+  // console.log(reqConfig)
+  return data1;
 };
 
 export default request;

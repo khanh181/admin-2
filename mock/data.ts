@@ -35,29 +35,29 @@ const users = [
 const menus = [
   {
     id: 1,
-    title: '首页',
+    title: 'home',
     icon: 'icon-home',
     path: '/home',
     parent: null,
-    desc: '首页',
+    desc: 'home',
     sorts: 0,
   },
   {
     id: 2,
-    title: '系统管理',
+    title: 'icon-setting',
     icon: 'icon-setting',
     url: '/system',
     parent: null,
-    desc: '系统管理目录分支',
+    desc: 'icon-setting',
     sorts: 1,
   },
   {
     id: 3,
-    title: '用户管理',
+    title: 'User management',
     icon: 'icon-user',
     url: '/system/useradmin',
     parent: 2,
-    desc: '系统管理/用户管理',
+    desc: 'User/User management',
     sorts: 0,
   },
   {
@@ -123,15 +123,15 @@ export default [
     method: 'post',
     response: ({ body }: any) => {
       const { username, password } = body;
-      if (username === 'admin' && password === '123456') {
+      if (username === 'admin1' && password === '123123') {
         return {
-          code: 0,
+          code: 200,
           data: { ...users[0], token: 'this_is_a_token' },
         };
       } else {
         return {
           code: -1,
-          message: '用户或密码错误',
+          message: 'Sai pas',
           data: null,
         };
       }
@@ -144,7 +144,7 @@ export default [
     method: 'get',
     response: () => {
       return {
-        code: 0,
+        code: 200,
         data: menus,
       };
     },
@@ -155,7 +155,7 @@ export default [
     method: 'get',
     response: () => {
       return {
-        code: 0,
+        code: 200,
         data: {
           name: 'xiaoxiao',
           age: 18,

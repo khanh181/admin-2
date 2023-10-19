@@ -2,10 +2,11 @@
 
 // zustand 采用观察者模式，对组件进行订阅更新，
 // 因此不需要在最外层提供一个类似redux的Provider包裹层
+import { message } from 'antd';
+import axios from 'axios';
 import create from 'zustand';
 
-import { login,register, otp } from '@/api/user';
-
+import { login, otp, register } from '@/api/user';
 
 // 数据持久化，会缓存到 storage
 // import { persist } from 'zustand/middleware';
@@ -47,31 +48,37 @@ const useStore = create<StateProps>((set, get) => ({
   login: async (val) => {
     // const res = await sleep(1000);
     const res = await login(val);
-    if (res.code === 0) {
+    console.log('get res login', res.code);
+    if (res.code === 200) {
       set({ user: res.data });
-      localStorage.setItem('vite-react-ts-antd-token', res.data.token);
-      console.log('res', res);
+      localStorage.setItem('user-token', res.results.token);
+      message.info(res.message);
       window.location.href = '/sys/home';
+    } else {
+      message.error(res.message);
     }
   },
   register: async (val) => {
     // const res = await sleep(1000);
     const res = await register(val);
-    if (res.code === 0) {
+    console.log('get res register', res.code);
+    if (res.code === 200) {
       set({ user: res.data });
-      localStorage.setItem('vite-react-ts-antd-token', res.data.token);
-      console.log('res', res);
+      message.info(res.message);
       window.location.href = '/user/login';
+    } else {
+      message.error(res.message);
     }
   },
   otp: async (val) => {
     // const res = await sleep(1000);
     const res = await otp(val);
-    if (res.code === 0) {
-      set({ user: res.data });
-      localStorage.setItem('vite-react-ts-antd-token', res.data.token);
+    if (res.code === 200) {
+      set({ otp: res.data });
+      message.info(res.message);
       console.log('res', res);
-      window.location.href = '/sys/home';
+    } else {
+      message.error(res.message);
     }
   },
   setUser: async (val) => {

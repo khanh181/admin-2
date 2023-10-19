@@ -12,7 +12,7 @@ const MyHeader: React.FC = () => {
 
   const handleChange = (e: { key: string }) => {
     if (e.key === '0') {
-      localStorage.removeItem('vite-react-ts-antd-token');
+      localStorage.removeItem('user-token');
       window.location.href = '/user/login';
     }
   };

@@ -12,9 +12,7 @@ const UserLayout: React.FC<{ route: IRouteConfig }> = ({ route }) => {
     <Layout className="_bg">
       <Content>{renderRoutes(route.routes)}</Content>
       <Footer>
-        <Text>
-          
-        </Text>
+        <Text></Text>
       </Footer>
     </Layout>
   );

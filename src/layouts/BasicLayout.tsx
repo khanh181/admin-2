@@ -13,7 +13,7 @@ const { Content } = Layout;
 const BasicLayout: React.FC<{ route: IRouteConfig }> = ({ route }) => {
   const history = createBrowserHistory();
 
-  if (!localStorage.getItem('vite-react-ts-antd-token')) {
+  if (!localStorage.getItem('user-token')) {
     history.push('/user/login');
   }
 

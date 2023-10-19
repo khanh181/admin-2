@@ -25,6 +25,12 @@ interface UserProps {
   token: string;
 }
 
+interface OtpProps {
+  authenId: string;
+  typeId: 1;
+  otpCode: string;
+}
+
 // 类型声明
 export type StateProps = {
   /**@name userInformation */

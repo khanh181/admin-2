@@ -5,11 +5,11 @@ import useStore from '../store';
 
 const Authority: React.FC = ({ children }) => {
   const history = createBrowserHistory();
-  
+
   const user = useStore((state) => state.user);
   console.log('Authority', user);
 
-  if (!localStorage.getItem('vite-react-ts-antd-token')) {
+  if (!localStorage.getItem('user-token')) {
     history.push('/user/login');
   }
   if (!user?.token) {
